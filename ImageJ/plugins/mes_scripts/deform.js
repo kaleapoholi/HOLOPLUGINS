@@ -9,7 +9,7 @@ function proj(canal,w,h,R,teta){
   
   let len = new_h * new_w;
   for (let i= 0; i < len; i++) {
-    let valpix=Math.floor(cpt[i]*255/1200);
+    let valpix=Math.floor(i*255/1200);
     ipcanalproj.set(i,valpix);
   }
 
@@ -26,21 +26,21 @@ let h=imp.getHeight();
 let title = imp.getTitle();
 IJ.run("Split Channels");
 IJ.selectWindow(`${title} (red)`); let impR = IJ.getImage(); impR.setTitle('red');
-//let result1 = proj(impR,w,h,R,teta);
-//result1.show();
+let result1 = proj(impR,w,h,R,teta);
+result1.show();
 IJ.selectWindow(`${title} (green)`); let impG = IJ.getImage(); impG.setTitle('green');
-//let result2 = proj(impG,w,h,R,teta);
-//result2.show();
+let result2 = proj(impG,w,h,R,teta);
+result2.show();
 IJ.selectWindow(`${title} (blue)`); let impB = IJ.getImage(); impB.setTitle('blue');
-//let result3 = proj(impB,w,h,R,teta);
-//result3.show();
+let result3 = proj(impB,w,h,R,teta);
+result3.show();
 
 let ic = new ImageCalculator();
-//let impRG = ic.run("Add create", result1, result2);
-//impRG.show();
+let impRG = ic.run("Add create", result1, result2);
+impRG.show();
 
 let ic2 = new ImageCalculator();
-//let impRGB = ic.run("Add create", impRG, result3);
-//impRGB.show();
+let impRGB = ic.run("Add create", impRG, result3);
+impRGB.show();
 
 IJ.log("fini");
