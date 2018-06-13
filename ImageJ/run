@@ -1,1 +1,1 @@
-/usr/lib/jvm/oracle-java9-jdk-amd64/bin/java -Dnashorn.args=--language=es6 -Xmx2048m -jar ij.jar
+/usr/lib/jvm/java-9-oracle/bin/java -Dnashorn.args=--language=es6 -Xmx2048m -jar ij.jar
