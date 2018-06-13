@@ -1,46 +1,52 @@
-function proj(canal,w,h,R,teta){
-  let new_w= 2*(R+w);
-  let new_h= 2*(R+w);
-  let ip = canal.getProcessor();
-  let titlec = canal.getTitle();
-  let canalproj=IJ.createImage(`${titlec}_proj`, "RGB black",new_w,new_h,1);
+function proj(canal, w, h, R, teta) {
+    //initialise
+    let mrows = 2 * (R + w);
+    let ncols = 2 * (R + w);
+    let ip = canal.getProcessor();
+    let titlec = canal.getTitle();
+    let dist = IJ.createImage("distorted", "RGB white", mrows, ncols, 1);
+    let ipdist = dist.getProcessor();
 
-  ipcanalproj=canalproj.getProcessor();
-  
-  let len = new_h * new_w;
-  for (let i= 0; i < len; i++) {
-    let valpix=Math.floor(i*255/1200);
-    ipcanalproj.set(i,valpix);
-  }
+    for (let i = 1; i < w; i++) {
+        IJ.log(i);
 
-  return canalproj;
-  }
-  
-let R=3.6;
-let teta=110; //faut il le mettre en radiant ? 
+        //determine pixel manquant
+        let alpha = teta * Math.PI * (R + w - i) / (180 * h);
+        if (alpha < 1) {
+            alpha = 1;
+        }
 
-let imp=IJ.getImage();
-let w= imp.getWidth();
-let h=imp.getHeight();
+        for (let j = 1; j < h; j++) {
+            for (let k = (alpha * j) - (alpha / 2); k < ((alpha * j) + (alpha / 2)); k++) {
+
+                //transformation des coordonnées
+                let gamma = (k - 1) * (teta / (h * alpha) * (Math.PI / 180));
+                let ni = R + w - (R + (w - i)) * Math.sin(gamma);
+                let nj = R + w - (R + (w - i)) * Math.cos(gamma);
+
+                //affecte valeur au pixel de coordonnées déterminées avant
+                let val = ip.getPixel(i, h - j + 1);
+                ipdist.set(ni, nj, val);
+                ipdist.set(ni + 1, nj + 1, val);
+                ipdist.set(ni - 1, nj + 1, val);
+                ipdist.set(ni, nj + 1, val);
+
+            }
+        }
+    }
+
+    return dist;
+}
+
+let R = 3.6;
+let teta = 170;
+
+let imp = IJ.getImage();
+let w = imp.getWidth();
+let h = imp.getHeight();
 
 let title = imp.getTitle();
-IJ.run("Split Channels");
-IJ.selectWindow(`${title} (red)`); let impR = IJ.getImage(); impR.setTitle('red');
-let result1 = proj(impR,w,h,R,teta);
+let result1 = proj(imp, w, h, R, teta);
 result1.show();
-IJ.selectWindow(`${title} (green)`); let impG = IJ.getImage(); impG.setTitle('green');
-let result2 = proj(impG,w,h,R,teta);
-result2.show();
-IJ.selectWindow(`${title} (blue)`); let impB = IJ.getImage(); impB.setTitle('blue');
-let result3 = proj(impB,w,h,R,teta);
-result3.show();
-
-let ic = new ImageCalculator();
-let impRG = ic.run("Add create", result1, result2);
-impRG.show();
-
-let ic2 = new ImageCalculator();
-let impRGB = ic.run("Add create", impRG, result3);
-impRGB.show();
 
 IJ.log("fini");
