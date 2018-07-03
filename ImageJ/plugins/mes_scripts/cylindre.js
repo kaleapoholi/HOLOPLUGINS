@@ -1,7 +1,8 @@
 function proj(canal, w, h, R, teta) {
     //initialise
-    let mrows = 2 * (R + w);
-    let ncols = 2 * (R + w);
+    let R2 = R + R / Math.sin((teta / 2) * (Math.PI / 180));
+    let mrows = 2.5 * R2;
+    let ncols = 2.5 * R2;
     let ip = canal.getProcessor();
     let titlec = canal.getTitle();
     let dist = IJ.createImage("distorted", "RGB black", mrows, ncols, 1);
@@ -39,7 +40,7 @@ function proj(canal, w, h, R, teta) {
 }
 
 let R = 360;
-let teta = 170;
+let teta = 180;
 
 let imp = IJ.getImage();
 let w = imp.getWidth();
