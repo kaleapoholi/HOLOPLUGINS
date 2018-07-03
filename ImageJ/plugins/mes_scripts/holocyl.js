@@ -7,8 +7,7 @@ function proj(canal, w, h, R, teta) {
     let titlec = canal.getTitle();
     let dist = IJ.createImage("distorted", "RGB black", mrows, ncols, 1);
     let ipdist = dist.getProcessor();
-    /*
-        for (let i = 1; i < w; i++) {
+    for (let i = 1; i < w; i++) {
             IJ.log(i);
 
             //determine pixel manquant
@@ -22,8 +21,8 @@ function proj(canal, w, h, R, teta) {
 
                     //transformation des coordonnées
                     let gamma = (k - 1) * (teta / (h * alpha) * (Math.PI / 180));
-                    let ni = R + w - (R + (w - i)) * Math.sin(gamma);
-                    let nj = R + w - (R + (w - i)) * Math.cos(gamma);
+                    let ni = (R/3) + w - ((R/3) + (w - i)) * Math.sin(gamma);
+                    let nj = (R/3) + w - ((R/3) + (w - i)) * Math.cos(gamma);
 
                     //affecte valeur au pixel de coordonnées déterminées avant
                     let val = ip.getPixel(i, h - j + 1);
@@ -31,11 +30,12 @@ function proj(canal, w, h, R, teta) {
                     ipdist.set(ni + 1, nj + 1, val);
                     ipdist.set(ni - 1, nj + 1, val);
                     ipdist.set(ni, nj + 1, val);
-
+                    dist.updateAndDraw();
+                    dist.show();
                 }
             }
         }
-    */
+    
     return dist;
 }
 
