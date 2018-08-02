@@ -1,3 +1,5 @@
+// anamorphose conique sur un cone en métal
+
 function proj(canal, w, h, R, teta) {
     //initialise
     let R2 = R + R / Math.sin((teta / 2) * (Math.PI / 180));

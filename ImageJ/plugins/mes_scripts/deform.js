@@ -1,3 +1,5 @@
+// anamorphose conique sur un cylindre en métal
+
 function proj(canal, w, h, R, teta) {
     //initialise
     let mrows = 2 * (R + w);
